@@ -57,3 +57,5 @@ conn.close()
 df = pd.DataFrame(ข้อมูลทั้งหมด, columns=['ชื่อ', 'อายุ', 'สาขา'])
 excel_file_path = 'ข้อมูลบุคคล.xlsx'
 df.to_excel(excel_file_path, index=False)
+
+#ฉบับแก้ไข
