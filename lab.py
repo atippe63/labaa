@@ -1,13 +1,9 @@
-import streamlit as st
 import sqlite3
-import pandas as pd
-import os
+import streamlit as st
 
-# เชื่อมต่อกับฐานข้อมูล SQLite
-conn = sqlite3.connect('ข้อมูลบุคคล')
+conn = sqlite3.connect('ข้อมูลบุคคล.db')
 cursor = conn.cursor()
-
-# สร้างตาราง
+property
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS ข้อมูลบุคคล (
         ชื่อ TEXT,
@@ -16,38 +12,31 @@ cursor.execute('''
     )
 ''')
 
-# ฟังก์ชันสำหรับเพิ่มข้อมูล
+# ฟังก์ชันเพิ่มข้อมูลและดึงข้อมูล
 def เพิ่มข้อมูล(ชื่อ, อายุ, สาขา):
+    conn = sqlite3.connect('ข้อมูลบุคคล.db')
+    cursor = conn.cursor()
     cursor.execute("INSERT INTO ข้อมูลบุคคล VALUES (?, ?, ?)", (ชื่อ, อายุ, สาขา))
     conn.commit()
+    conn.close()
 
-# ฟังก์ชันสำหรับดึงข้อมูลทั้งหมด
 def ดึงข้อมูล():
+    conn = sqlite3.connect('ข้อมูลบุคคล.db')
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM ข้อมูลบุคคล")
-    return cursor.fetchall()
+    data = cursor.fetchall()
+    conn.close()
+    return data
 
 # Streamlit App
 st.title('ข้อมูลบุคคล')
 
-# ลิสต์เพื่อเก็บข้อมูลของบุคคล
-individuals_list = []
-
-# เพิ่มข้อมูลในฟอร์ม
+# แสดงฟอร์มเพื่อเพิ่มข้อมูล
 ชื่อ = st.text_input('ชื่อ:')
 อายุ = st.number_input('อายุ:')
 สาขา = st.text_input('สาขา:')
 if st.button('เพิ่มข้อมูล'):
     เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
-    individual_info = {'ชื่อ': ชื่อ, 'อายุ': อายุ, 'สาขา': สาขา}
-    individuals_list.append(individual_info)  # อัพเดทลิสต์ของบุคคล
-
-# ปุ่มรีเซ็ตข้อมูล
-if st.button('รีเซ็ตข้อมูล'):
-    # เพิ่มคำสั่ง SQL สำหรับลบข้อมูลทั้งหมดในตาราง
-    cursor.execute("DELETE FROM ข้อมูลบุคคล")
-    conn.commit()
-    st.warning('รีเซ็ตข้อมูลสำเร็จ!')
-    individuals_list = []  # รีเซ็ตลิสต์ของบุคคล
 
 # แสดงข้อมูลทั้งหมด
 ข้อมูลทั้งหมด = ดึงข้อมูล()
@@ -55,11 +44,5 @@ st.write('ข้อมูลทั้งหมด:')
 for row in ข้อมูลทั้งหมด:
     st.write(f"ชื่อ: {row[0]}, อายุ: {row[1]}, สาขา: {row[2]}")
 
-# แสดงลิสต์ของบุคคล
-st.write('รายชื่อ:')
-for individual in individuals_list:
-    st.write(f"ชื่อ: {individual['ชื่อ']}, อายุ: {individual['อายุ']}, สาขา: {individual['สาขา']}")
-
-# ปิดการเชื่อมต่อกับฐานข้อมูล
-cursor.close()
+conn.commit()
 conn.close()
