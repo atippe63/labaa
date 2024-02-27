@@ -40,8 +40,16 @@ def นับข้อมูล():
     conn.close()
     return count
 
+# ฟังก์ชันสำหรับล้างข้อมูลทั้งหมด
+def clear_all_data():
+    conn = sqlite3.connect('ข้อมูลบุคคล.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM ข้อมูลบุคคล")
+    conn.commit()
+    conn.close()
+
 # Streamlit App
-st.title('ข้อมูลบุคคล')
+st.title('Project')
 
 # สร้างตารางหากยังไม่มี
 create_table()
@@ -69,6 +77,7 @@ elif page == 'เพิ่มข้อมูล':
         สาขา = st.selectbox('สาขา:', สาขา_options)
     if st.button('เพิ่มข้อมูล'):
         เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
+        st.warning('เพิ่มข้อมูลทั้งหมดสำเร็จ!')
 
 elif page == 'ดูข้อมูล':
     st.title('ดูข้อมูลบุคคล')
@@ -84,6 +93,6 @@ elif page == 'ล้างข้อมูล':
     # แสดงปุ่มล้างข้อมูล
     if st.checkbox('ยืนยันการล้างข้อมูลทั้งหมด'):
         if st.button('ล้างข้อมูลทั้งหมด'):
-            ล้างข้อมูลทั้งหมด()
+            clear_all_data()
             st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
 
