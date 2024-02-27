@@ -53,23 +53,28 @@ st.title('ข้อมูลบุคคล')
 # Create table if not exists
 create_table()
 
+# Check if user is logged in (assumed username is 'admin')
+is_logged_in = st.session_state.is_logged_in if 'is_logged_in' in st.session_state else False
+
 # Show form to add data
-ชื่อ = st.text_input('ชื่อ:')
-อายุ = st.number_input('อายุ:')
-สาขา = st.text_input('สาขา:')
-if st.button('เพิ่มข้อมูล'):
-    เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
+if is_logged_in:
+    ชื่อ = st.text_input('ชื่อ:')
+    อายุ = st.number_input('อายุ:')
+    สาขา = st.text_input('สาขา:')
+    if st.button('เพิ่มข้อมูล'):
+        เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
 
-# Display all data using Pandas DataFrame
-ข้อมูลทั้งหมด = ดึงข้อมูล()
-st.write('ข้อมูลทั้งหมด:')
-st.write(ข้อมูลทั้งหมด)
+    # Display all data using Pandas DataFrame
+    ข้อมูลทั้งหมด = ดึงข้อมูล()
+    st.write('ข้อมูลทั้งหมด:')
+    st.write(ข้อมูลทั้งหมด)
 
-# Button to delete specific row
-if st.button('ลบข้อมูลตามชื่อ', key='delete_by_name'):
-    # Assume the owner's username is 'admin'
-    if st.text_input('กรุณากรอกชื่อผู้ใช้ (admin เท่านั้น):') == 'atip':
-        ลบข้อมูลตามชื่อ(ชื่อ, อายุ, สาขา)
-        st.warning('ลบข้อมูลสำเร็จ!')
-    else:
-        st.warning('ชื่อผู้ใช้ไม่ถูกต้อง')
+    # Button to delete all data
+    if st.button('ล้างข้อมูลทั้งหมด'):
+        ลบข้อมูลทั้งหมด()
+        st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
+
+# Show login button if not logged in
+else:
+    if st.button('เข้าสู่ระบบ'):
+        st.session_state.is_logged_in = True
