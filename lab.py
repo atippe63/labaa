@@ -24,14 +24,12 @@ def เพิ่มข้อมูล(ชื่อ, อายุ, สาขา):
     conn.commit()
     conn.close()
 
-# Function to fetch all data
+# Function to fetch all data as Pandas DataFrame
 def ดึงข้อมูล():
     conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM ข้อมูลบุคคล")
-    data = cursor.fetchall()
+    df = pd.read_sql_query("SELECT * FROM ข้อมูลบุคคล", conn)
     conn.close()
-    return data
+    return df
 
 # Streamlit App
 st.title('ข้อมูลบุคคล')
@@ -46,8 +44,7 @@ create_table()
 if st.button('เพิ่มข้อมูล'):
     เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
 
-# Display all data
+# Display all data using Pandas DataFrame
 ข้อมูลทั้งหมด = ดึงข้อมูล()
 st.write('ข้อมูลทั้งหมด:')
-for row in ข้อมูลทั้งหมด:
-    st.write(f"ชื่อ: {row[0]}, อายุ: {row[1]}, สาขา: {row[2]}")
+st.write(ข้อมูลทั้งหมด)
