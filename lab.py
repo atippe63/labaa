@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# สร้างตารางหากยังไม่มี
+# ฟังก์ชันสำหรับสร้างตารางหากยังไม่มี
 def create_table():
     return pd.DataFrame(columns=['ชื่อ', 'อายุ', 'สาขา'])
 
