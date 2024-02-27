@@ -24,14 +24,28 @@ def เพิ่มข้อมูล(ชื่อ, อายุ, สาขา):
     conn.commit()
     conn.close()
 
-# Function to fetch all data
+# Function to fetch all data as Pandas DataFrame
 def ดึงข้อมูล():
     conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM ข้อมูลบุคคล")
-    data = cursor.fetchall()
+    df = pd.read_sql_query("SELECT * FROM ข้อมูลบุคคล", conn)
     conn.close()
-    return data
+    return df
+
+# Function to delete all data
+def ลบข้อมูลทั้งหมด():
+    conn = sqlite3.connect('ข้อมูลบุคคล.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM ข้อมูลบุคคล")
+    conn.commit()
+    conn.close()
+
+# Function to delete specific row
+def ลบข้อมูลตามชื่อ(ชื่อ):
+    conn = sqlite3.connect('ข้อมูลบุคคล.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM ข้อมูลบุคคล WHERE ชื่อ=?", (ชื่อ,))
+    conn.commit()
+    conn.close()
 
 # Streamlit App
 st.title('ข้อมูลบุคคล')
@@ -46,8 +60,16 @@ create_table()
 if st.button('เพิ่มข้อมูล'):
     เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
 
-# Display all data
+# Display all data using Pandas DataFrame
 ข้อมูลทั้งหมด = ดึงข้อมูล()
 st.write('ข้อมูลทั้งหมด:')
-for row in ข้อมูลทั้งหมด:
-    st.write(f"ชื่อ: {row[0]}, อายุ: {row[1]}, สาขา: {row[2]}")
+st.write(ข้อมูลทั้งหมด)
+
+# Button to delete specific row
+if st.button('ลบข้อมูลตามชื่อ', key='delete_by_name'):
+    # Assume the owner's username is 'admin'
+    if st.text_input('กรุณากรอกชื่อผู้ใช้ (admin เท่านั้น):') == 'admin':
+        ลบข้อมูลตามชื่อ(ชื่อ)
+        st.warning('ลบข้อมูลสำเร็จ!')
+    else:
+        st.warning('ชื่อผู้ใช้ไม่ถูกต้อง')
