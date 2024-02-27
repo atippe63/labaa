@@ -68,8 +68,8 @@ st.write(ข้อมูลทั้งหมด)
 # Button to delete specific row
 if st.button('ลบข้อมูลตามชื่อ', key='delete_by_name'):
     # Assume the owner's username is 'admin'
-    if st.text_input('กรุณากรอกชื่อผู้ใช้ (admin เท่านั้น):') == 'admin':
-        ลบข้อมูลตามชื่อ(ชื่อ)
+    if st.text_input('กรุณากรอกชื่อผู้ใช้ (admin เท่านั้น):') == 'atip':
+        ลบข้อมูลตามชื่อ(ชื่อ, อายุ, สาขา)
         st.warning('ลบข้อมูลสำเร็จ!')
     else:
         st.warning('ชื่อผู้ใช้ไม่ถูกต้อง')
