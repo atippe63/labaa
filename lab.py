@@ -1,80 +1,65 @@
-import sqlite3
 import streamlit as st
 import pandas as pd
 
-# Function to create table if not exists
+# สร้างตารางหากยังไม่มี
 def create_table():
-    conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS ข้อมูลบุคคล (
-            ชื่อ TEXT,
-            อายุ INTEGER,
-            สาขา TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    return pd.DataFrame(columns=['ชื่อ', 'อายุ', 'สาขา'])
 
-# Function to add data
-def เพิ่มข้อมูล(ชื่อ, อายุ, สาขา):
-    conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO ข้อมูลบุคคล VALUES (?, ?, ?)", (ชื่อ, อายุ, สาขา))
-    conn.commit()
-    conn.close()
+# ตั้งค่าลักษณะของหน้าแอป
+st.set_page_config(page_title='ข้อมูลบุคคล', page_icon='🧑‍💼', layout='wide')
 
-# Function to fetch all data as Pandas DataFrame
-def ดึงข้อมูล():
-    conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    df = pd.read_sql_query("SELECT * FROM ข้อมูลบุคคล", conn)
-    conn.close()
+# ฟังก์ชันสำหรับเพิ่มข้อมูล
+def เพิ่มข้อมูล(ชื่อ, อายุ, สาขา, df):
+    new_data = pd.DataFrame({'ชื่อ': [ชื่อ], 'อายุ': [อายุ], 'สาขา': [สาขา]})
+    df = pd.concat([df, new_data], ignore_index=True)
     return df
 
-# Function to delete all data
-def ลบข้อมูลทั้งหมด():
-    conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM ข้อมูลบุคคล")
-    conn.commit()
-    conn.close()
+# ฟังก์ชันสำหรับลบข้อมูลทั้งหมด
+def ลบข้อมูลทั้งหมด(df):
+    return pd.DataFrame(columns=['ชื่อ', 'อายุ', 'สาขา'])
 
-# Function to delete specific row
-def ลบข้อมูลตามชื่อ(ชื่อ):
-    conn = sqlite3.connect('ข้อมูลบุคคล.db')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM ข้อมูลบุคคล WHERE ชื่อ=?", (ชื่อ,))
-    conn.commit()
-    conn.close()
+# ฟังก์ชันสำหรับลบข้อมูลตามชื่อ
+def ลบข้อมูลตามชื่อ(ชื่อ, df):
+    df = df[df['ชื่อ'] != ชื่อ]
+    return df
+
+# ฟังก์ชันสำหรับนับจำนวนผู้ใช้
+def count_users(df):
+    return len(df)
 
 # Streamlit App
 st.title('ข้อมูลบุคคล')
 
-# Create table if not exists
-create_table()
+# สร้างตารางหากยังไม่มี
+if 'data' not in st.session_state:
+    st.session_state.data = create_table()
 
-# Check if user is logged in (assumed username is 'admin')
+# ตรวจสอบว่าผู้ใช้เข้าสู่ระบบหรือไม่
 is_logged_in = st.session_state.is_logged_in if 'is_logged_in' in st.session_state else False
 
-# Show form to add data
+# แสดงฟอร์มสำหรับเพิ่มข้อมูล
 if is_logged_in:
     ชื่อ = st.text_input('ชื่อ:')
     อายุ = st.number_input('อายุ:')
     สาขา = st.text_input('สาขา:')
     if st.button('เพิ่มข้อมูล'):
-        เพิ่มข้อมูล(ชื่อ, อายุ, สาขา)
+        st.session_state.data = เพิ่มข้อมูล(ชื่อ, อายุ, สาขา, st.session_state.data)
 
-    # Display all data using Pandas DataFrame
-    ข้อมูลทั้งหมด = ดึงข้อมูล()
+    # แสดงข้อมูลทั้งหมดเป็น Pandas DataFrame
     st.write('ข้อมูลทั้งหมด:')
-    st.write(ข้อมูลทั้งหมด)
+    st.write(st.session_state.data)
 
-    # Button to delete all data
+    # ปุ่มลบข้อมูลทั้งหมด
     if st.button('ล้างข้อมูลทั้งหมด'):
-        ลบข้อมูลทั้งหมด()
+        st.session_state.data = ลบข้อมูลทั้งหมด(st.session_state.data)
         st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
 
-# Show login button if not logged in
+    # แสดงจำนวนผู้ใช้
+    st.write(f'จำนวนผู้ใช้งาน: {count_users(st.session_state.data)}')
+
+# แสดงปุ่มเข้าสู่ระบบถ้ายังไม่ได้เข้าสู่ระบบ
 else:
     if st.button('เข้าสู่ระบบ'):
+        # แสดงจำนวนผู้ใช้
+        st.write(f'จำนวนผู้ใช้งาน: {count_users(st.session_state.data)}')
         st.session_state.is_logged_in = True
