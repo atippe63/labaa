@@ -1,5 +1,6 @@
 import sqlite3
 import streamlit as st
+import pandas as pd
 
 # Function to create table if not exists
 def create_table():
