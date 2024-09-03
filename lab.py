@@ -95,10 +95,14 @@ elif page == 'ล้างข้อมูล':
             clear_all_data()
             st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
 from PIL import Image
-jpg_file = Image.open('C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
-type(jpg_file)
-PIL.JpegImagePlugin.JpegImageFile
+import streamlit as st
 
-In [10]: (0,0,1600,900)
-OUT [11]: (0, 0, 1600, 900)
+# นำเข้ารูปภาพ
+jpg_file = Image.open('C:/Users/Admin/OneDrive/เดสก์ท็อป/รายงานสหกิจศึกษา/OCP1.jpg')
+
+# แสดงรูปภาพใน Streamlit
+st.image(jpg_file)
+
+jpg_file = Image.open(r'C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
+
 
