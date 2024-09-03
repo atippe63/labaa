@@ -98,7 +98,7 @@ import os
 from PIL import Image
 import streamlit as st
 
-path = 'rC:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg'
+path = 'C:\\Users\\Admin\\OneDrive\\เดสก์ท็อป\\รายงานสหกิจศึกษา\\OCP1.jpg'
 
 if os.path.exists(path):
     jpg_file = Image.open(path)
