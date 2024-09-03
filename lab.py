@@ -94,15 +94,16 @@ elif page == 'ล้างข้อมูล':
     if st.button('ล้างข้อมูลทั้งหมด'):
             clear_all_data()
             st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
+import os
 from PIL import Image
 import streamlit as st
 
-# นำเข้ารูปภาพ
-jpg_file = Image.open('C:/Users/Admin/OneDrive/เดสก์ท็อป/รายงานสหกิจศึกษา/OCP1.jpg')
+path = 'C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg'
 
-# แสดงรูปภาพใน Streamlit
-st.image(jpg_file)
-
-jpg_file = Image.open('C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
+if os.path.exists(path):
+    jpg_file = Image.open(path)
+    st.image(jpg_file)
+else:
+    st.error('ไม่พบรูปภาพใน Path ที่ระบุ')
 
 
