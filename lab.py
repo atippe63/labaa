@@ -94,4 +94,11 @@ elif page == 'ล้างข้อมูล':
     if st.button('ล้างข้อมูลทั้งหมด'):
             clear_all_data()
             st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
+from PIL import Image
+jpg_file = Image.open('youtube-cover-2.jpg')
+type(jpg_file)
+PIL.JpegImagePlugin.JpegImageFile
+
+In [10]: (0,0,1600,900)
+OUT [11]: (0, 0, 1600, 900)
 
