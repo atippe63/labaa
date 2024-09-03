@@ -95,7 +95,7 @@ elif page == 'ล้างข้อมูล':
             clear_all_data()
             st.warning('ล้างข้อมูลทั้งหมดสำเร็จ!')
 from PIL import Image
-jpg_file = Image.open('OCP1.jpg')
+jpg_file = Image.open('C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
 type(jpg_file)
 PIL.JpegImagePlugin.JpegImageFile
 
