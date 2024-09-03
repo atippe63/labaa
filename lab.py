@@ -103,6 +103,6 @@ jpg_file = Image.open('C:/Users/Admin/OneDrive/เดสก์ท็อป/ร�
 # แสดงรูปภาพใน Streamlit
 st.image(jpg_file)
 
-jpg_file = Image.open(r'C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
+jpg_file = Image.open('C:\Users\Admin\OneDrive\เดสก์ท็อป\รายงานสหกิจศึกษา\OCP1.jpg')
 
 
